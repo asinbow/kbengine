@@ -72,7 +72,7 @@ state_(C_STATE_INIT)
 	networkInterface_.pChannelTimeOutHandler(this);
 	networkInterface_.pChannelDeregisterHandler(this);
 
-	// ³õÊ¼»¯mailboxÄ£¿é»ñÈ¡channelº¯ÊıµØÖ·
+	// åˆå§‹åŒ–mailboxæ¨¡å—è·å–channelå‡½æ•°åœ°å€
 	EntityMailbox::setFindChannelFunc(std::tr1::bind(&ClientApp::findChannelByMailbox, this, 
 		std::tr1::placeholders::_1));
 
@@ -119,7 +119,7 @@ bool ClientApp::initializeBegin()
 //-------------------------------------------------------------------------------------	
 bool ClientApp::initializeEnd()
 {
-	// ËùÓĞ½Å±¾¶¼¼ÓÔØÍê±Ï
+	// æ‰€æœ‰è„šæœ¬éƒ½åŠ è½½å®Œæ¯•
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
 										const_cast<char*>("onInit"), 
 										const_cast<char*>("i"), 
@@ -173,13 +173,13 @@ bool ClientApp::installEntityDef()
 	if(!EntityDef::installScript(getScript().getModule()))
 		return false;
 
-	// ³õÊ¼»¯ËùÓĞÀ©Õ¹Ä£¿é
+	// åˆå§‹åŒ–æ‰€æœ‰æ‰©å±•æ¨¡å—
 	// demo/res/scripts/
 	if(!EntityDef::initialize(scriptBaseTypes_, g_componentType)){
 		return false;
 	}
 
-	// ×¢²áÒ»Ğ©½Ó¿Úµ½kbengine
+	// æ³¨å†Œä¸€äº›æ¥å£åˆ°kbengine
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	publish,			__py_getAppPublish,								METH_VARARGS,	0)
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	fireEvent,			__py_fireEvent,									METH_VARARGS,	0)
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	player,				__py_getPlayer,									METH_VARARGS,	0)
@@ -211,7 +211,7 @@ bool ClientApp::installPyModules()
 	registerScript(client::Entity::getScriptType());
 	onInstallPyModules();
 
-	// ×¢²áÉèÖÃ½Å±¾Êä³öÀàĞÍ
+	// æ³¨å†Œè®¾ç½®è„šæœ¬è¾“å‡ºç±»å‹
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	scriptLogType,	__py_setScriptLogType,	METH_VARARGS,	0)
 	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
 	{
@@ -240,7 +240,7 @@ bool ClientApp::installPyModules()
 
 	registerPyObjectToScript("entities", pEntities_);
 
-	// °²×°Èë¿ÚÄ£¿é
+	// å®‰è£…å…¥å£æ¨¡å—
 	PyObject *entryScriptFileName = PyUnicode_FromString(g_kbeConfig.entryScriptFile());
 	if(entryScriptFileName != NULL)
 	{
@@ -369,7 +369,7 @@ void ClientApp::handleGameTick()
 
 					networkInterface().dispatcher().registerFileDescriptor(*pServerChannel_->endpoint(), pTCPPacketReceiver_);
 					
-					// ÏÈÎÕÊÖÈ»ºóµÈhelloCBÖ®ºóÔÙ½øĞĞµÇÂ¼
+					// å…ˆæ¡æ‰‹ç„¶åç­‰helloCBä¹‹åå†è¿›è¡Œç™»å½•
 					Mercury::Bundle* pBundle = Mercury::Bundle::ObjPool().createObject();
 					(*pBundle).newMessage(BaseappInterface::hello);
 					(*pBundle) << KBEVersion::versionString();
@@ -427,7 +427,7 @@ int ClientApp::processOnce(bool shouldIdle)
 //-------------------------------------------------------------------------------------
 void ClientApp::onTargetChanged()
 { 
-	// ËùÓĞ½Å±¾¶¼¼ÓÔØÍê±Ï
+	// æ‰€æœ‰è„šæœ¬éƒ½åŠ è½½å®Œæ¯•
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
 										const_cast<char*>("onTargetChanged"), 
 										const_cast<char*>("i"), 
@@ -496,7 +496,7 @@ PyObject* ClientApp::__py_fireEvent(PyObject* self, PyObject* args)
 		PyUnicode_AsWideCharStringRet0 = PyUnicode_AsWideCharString(pyitem, NULL);
 		if(PyUnicode_AsWideCharStringRet0 == NULL)
 		{
-			PyErr_Format(PyExc_AssertionError, "ClientApp::fireEvent(%s): arg2 not is str!\n", eventdata.name);
+			PyErr_Format(PyExc_AssertionError, "ClientApp::fireEvent(%s): arg2 not is str!\n", eventdata.name.c_str());
 			PyErr_PrintEx(0);
 			return NULL;
 		}
@@ -589,7 +589,7 @@ bool ClientApp::login(std::string accountName, std::string passwd,
 
 		networkInterface().dispatcher().registerFileDescriptor(*pServerChannel_->endpoint(), pTCPPacketReceiver_);
 		
-		// ÏÈÎÕÊÖÈ»ºóµÈhelloCBÖ®ºóÔÙ½øĞĞµÇÂ¼
+		// å…ˆæ¡æ‰‹ç„¶åç­‰helloCBä¹‹åå†è¿›è¡Œç™»å½•
 		Mercury::Bundle* pBundle = Mercury::Bundle::ObjPool().createObject();
 		(*pBundle).newMessage(LoginappInterface::hello);
 		(*pBundle) << KBEVersion::versionString();
